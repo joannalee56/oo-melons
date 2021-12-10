@@ -1,4 +1,6 @@
 """Classes for melon orders."""
+from random import randint
+import datetime
 
 class AbstractMelonOrder:
     """An abstract base class that other Melon Orders inherit from."""
@@ -8,9 +10,18 @@ class AbstractMelonOrder:
         self.qty = qty
         self.shipped = False
 
+    def get_base_price(self):
+        base_price = randint(5, 9)
+        today = datetime.now()
+        if today.weekday() in range(0, 6) and today.hour():
+            
+        return
+
     def get_total(self):
         """Calculate price, including tax."""
-        base_price = 7.5 if self.species == 'Christmas melon' else 5
+        base_price = self.get_base_price()
+        if self.species == 'Christmas melon':
+            base_price *= 1.5
         total = (1 + self.tax) * self.qty * base_price
         if self.order_type == 'international' and self.qty < 10:
             total += 3
@@ -28,6 +39,7 @@ class DomesticMelonOrder(AbstractMelonOrder):
         self.tax = 0.08
         super().__init__(species, qty)
 
+
 class InternationalMelonOrder(AbstractMelonOrder):
     """An international (non-US) melon order."""
     def __init__(self, species, qty, country_code):
@@ -40,6 +52,7 @@ class InternationalMelonOrder(AbstractMelonOrder):
     def get_country_code(self):
         """Return the country code."""
         return self.country_code
+
 
 class GovernmentMelonOrder(AbstractMelonOrder):
     def __init__(self, species, qty):
